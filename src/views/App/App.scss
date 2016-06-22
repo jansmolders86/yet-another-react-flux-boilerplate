@@ -1,0 +1,12 @@
+@import '../../components/variables.scss';
+
+#sidebarPush{
+  @include respond-min-width(md){
+    margin-left: 95px;
+    padding-right: 0;
+
+    > .row > .col-xs-12{
+      padding: 0!important;
+    }
+  }
+}
