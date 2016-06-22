@@ -1,3 +1,0 @@
-## How to create CRUD
-
-Coming soon, work in progress...
