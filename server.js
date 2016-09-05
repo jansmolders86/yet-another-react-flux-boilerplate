@@ -44,9 +44,6 @@ const cookieParams = {
   maxAge: 300000,
 };
 
-// IMPORT TEST DB, ONLY FOR LOCAL TESTING!!!
-// import testDb  from './constants/testdb';
-
 // auth-cookie
 server.use(cookieParser(config.crypto));
 server.use(cookieEncrypter(config.crypto));
@@ -112,7 +109,6 @@ server.get('/auth/fb/callback',
   }
 );
 
-
 // Basic local authentication
 server.post('/auth/login', function(req,res) {
     const username = req.body.username;
@@ -120,7 +116,7 @@ server.post('/auth/login', function(req,res) {
     if(testEmail(username)){
       dataFacade.getUser({'username' : username}, function(user) {
         if (user) {
-          if (bcrypt.compareSync(password, user.password) || password === user.password) {
+          if (bcrypt.compareSync(password, user.password) || password === user.password) {
             req.login({'id': user._id, 'username': user.username, 'permission': user.permission}, function(err) {
               if (err) {
                 return res.status(400).send(err);
@@ -166,222 +162,6 @@ server.get('/users', function(req, res) {
         return res.status(400).send('notFound');
       }
     });
-  }
-});
-
-server.get('/likes', function(req, res) {
-  dataFacade.getLikes(function(likes) {
-    return res.status(200).send(likes);
-  });
-});
-
-// Add functionality
-
-server.post('/addLike', function(req, res) {
-  if (req.signedCookies.user) {
-    dataFacade.addLike({userId: req.body.userId, itemId: req.body.itemId});
-    return res.status(200).send();
-  } else {
-    return res.status(401).send('notAllowed');
-  }
-});
-
-server.post('/addCategory', function(req, res) {
-  if (req.signedCookies.user && req.signedCookies.user.permission == 'admin') {
-    const category = {
-      title: req.body.title,
-      language: req.body.language,
-      urlkey: req.body.urlkey,
-      description: req.body.description
-    };
-
-    dataFacade.addCategories(category);
-    return res.status(200).send();
-  } else {
-    return res.status(401).send('notAllowed');
-  }
-});
-
-server.post('/addTopic', function(req, res) {
-  if (req.signedCookies.user && req.signedCookies.user.permission == 'admin') {
-    const topic = {
-      title: req.body.title,
-      hot: req.body.hot,
-      id: req.body.id
-    };
-    const categoryTitle = req.body.category;
-    dataFacade.getCategory({urlkey: categoryTitle}, function(category) {
-      category.topics.push(topic);
-      dataFacade.updateCategory({_id: category._id}, category);
-      return res.status(200).send(topic);
-    });
-  } else {
-    return res.status(401).send('notAllowed');
-  }
-});
-
-server.post('/addItem', function(req, res) {
-  if (req.signedCookies.user && req.signedCookies.user.permission == 'admin') {
-    const categoryTitle = req.body.category;
-    const topicTitle = req.body.topic;
-    dataFacade.getCategory({urlkey: categoryTitle}, function(category) {
-      for (let i = 0; i < category.topics.length; i++) {
-        if (category.topics[i].title == topicTitle) {
-          const item = {
-            title: req.body.item,
-            description: req.body.description,
-            order: req.body.order,
-            itemImage: req.body.itemImage,
-            purchaseLink: req.body.purchaseLink
-          };
-          category.topics[i].items.push(item);
-        }
-      }
-
-      dataFacade.updateCategory({_id: category._id}, category);
-      return res.status(200).send();
-    });
-  } else {
-    return res.status(401).send('notAllowed');
-  }
-});
-
-server.post('/addSubItem', function(req, res) {
-  if (req.signedCookies.user && req.signedCookies.user.permission == 'admin') {
-    const categoryTitle = req.body.category;
-    const topicTitle = req.body.topic;
-    const ItemTitle = req.body.item;
-    dataFacade.getCategory({urlkey: categoryTitle}, function(category) {
-      for (let i = 0; i < category.topics.length; i++) {
-        if (category.topics[i].title === topicTitle) {
-          for (let j = 0; j < category.topics[i].items.length; j++) {
-            if (category.topics[i].items[j].title === ItemTitle) {
-              const subItem = {
-                title: req.body.title,
-                description: req.body.description,
-                order: req.body.order,
-                itemImage: req.body.itemImage,
-                purchaseLink: req.body.purchaseLink,
-                media: [{
-                  mediaType: req.body.mediaType,
-                  url: req.body.mediaUrl
-                }]
-              };
-              category.topics[i].items[j].subItems.push(subItem);
-            }
-          }
-
-        }
-      }
-      dataFacade.updateCategory({_id: category._id}, category);
-      return res.status(200).send();
-    });
-  } else {
-    return res.status(401).send('notAllowed');
-  }
-});
-
-// Update functionality
-
-server.post('/updateCategory', function(req, res) {
-  if (req.signedCookies.user && req.signedCookies.user.permission == 'admin') {
-    const oldCategoryUrl = req.body.oldTitle;
-    dataFacade.getCategory({urlkey: oldCategoryUrl}, function(category) {
-      category.title = req.body.title;
-      category.language = req.body.language;
-      category.urlkey = req.body.urlkey;
-      category.description = req.body.description;
-      category.image = req.body.image;
-
-      dataFacade.updateCategory({_id: category._id}, category);
-      return res.status(200).send();
-    });
-  } else {
-    return res.status(401).send();
-  }
-});
-
-server.post('/updateTopic', function(req, res) {
-  if (req.signedCookies.user && req.signedCookies.user.permission == 'admin') {
-    const categoryTitle = req.body.category;
-    const oldTopicTitle = req.body.oldTitle;
-    dataFacade.getCategory({title: categoryTitle}, function(category) {
-      for (let i = 0; i < category.topics.length; i++) {
-        if (category.topics[i].title === oldTopicTitle) {
-          category.topics[i].title = req.body.title;
-          category.topics[i].hot = req.body.hot;
-          category.topics[i].id = req.body.id;
-          dataFacade.updateCategory({_id: category._id}, category);
-          return res.status(200).send();
-        } else {
-          return res.status(400).send();
-        }
-      }
-    });
-  } else {
-    return res.status(401).send('notAllowed');
-  }
-});
-
-
-server.post('/updateItem', function(req, res) {
-  if (req.signedCookies.user && req.signedCookies.user.permission == 'admin') {
-    const categoryTitle = req.body.category;
-    const topicTitle = req.body.topic;
-    const oldItemTitle = req.body.oldTitle;
-    dataFacade.getCategory({urlkey: categoryTitle}, function(category) {
-      for (let i = 0; i < category.topics.length; i++) {
-        if (category.topics[i].title === topicTitle) {
-          for (let j = 0; j < category.topics[i].items.length; j++) {
-            if (category.topics[i].items[j].title === oldItemTitle) {
-              category.topics[i].items[j].title = req.body.item;
-              category.topics[i].items[j].description = req.body.description;
-              category.topics[i].items[j].order = req.body.order;
-              category.topics[i].items[j].itemImage = req.body.itemImage;
-            }
-          }
-        }
-      }
-      dataFacade.updateCategory({_id: category._id}, category);
-      return res.status(200).send();
-    });
-  } else {
-    return res.status(401).send('notAllowed');
-  }
-});
-
-server.post('/updateSubItem', function(req, res) {
-  if (req.signedCookies.user && req.signedCookies.user.permission == 'admin') {
-    const categoryTitle = req.body.category;
-    const topicTitle = req.body.topic;
-    const itemTitle = req.body.item;
-    const oldSubItemTitle = req.body.oldTitle;
-    dataFacade.getCategory({urlkey: categoryTitle}, function(category) {
-      for (let i = 0; i < category.topics.length; i++) {
-        if (category.topics[i].title == topicTitle) {
-          for (let j = 0; j < category.topics[i].items.length; j++) {
-            if (category.topics[i].items[j].title == itemTitle) {
-              for (let k = 0; k < category.topics[i].items[j].subItems.length; k++) {
-                if (category.topics[i].items[j].subItems[k].title == oldSubItemTitle) {
-                  category.topics[i].items[j].subItems[k].title = req.body.title;
-                  category.topics[i].items[j].subItems[k].description = req.body.description;
-                  category.topics[i].items[j].subItems[k].order = req.body.order;
-                  category.topics[i].items[j].subItems[k].itemImage = req.body.itemImage;
-                  const subItemMedia = category.topics[i].items[j].subItems[k].media[0];
-                  subItemMedia.mediaType = req.body.mediaType;
-                  subItemMedia.url = req.body.mediaUrl;
-                }
-              }
-            }
-          }
-        }
-      }
-
-      dataFacade.updateCategory({_id: category._id}, category);
-      return res.status(200).send();
-    });
-  } else {
-    return res.status(401).send();
   }
 });
 
