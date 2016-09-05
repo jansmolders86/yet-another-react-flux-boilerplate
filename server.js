@@ -71,6 +71,11 @@ const testEmail = function testEmail(value){
   return re.test(value);
 };
 
+testPassword(value){
+  const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/;
+  return re.test(value);
+}
+
 //
 // Passport session setup.
 //
@@ -139,17 +144,27 @@ server.post('/auth/login', function(req,res) {
 );
 
 server.post('/auth/register', function(req, res) {
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(req.body.password, salt);
-    dataFacade.addUser({
-      username: req.body.username,
-      password: hash,
-      permission: 'user'
+  const username = req.body.username;
+  const password = req.body.password;
+  if (testEmail(username) && testPassword(password)) {
+    dataFacade.getUser({username: username}, function (user) {
+      if (user === 'not found') {
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(password, salt);
+        dataFacade.addUser({
+          username: username,
+          password: hash,
+          permission: 'user'
+        });
+        return res.status(200).send();
+      } else {
+        return res.status(401).send('alreadyRegistered');
+      }
     });
-    return res.status(200).send();
+  } else {
+    return res.status(401).send('notAllowed');
   }
-);
-
+});
 // Get functionality
 
 server.get('/users', function(req, res) {
