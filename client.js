@@ -1,0 +1,77 @@
+
+import 'babel-polyfill';
+import React from 'react';
+import { render } from 'react-dom';
+import Iso from 'iso';
+import alt from './core/alt';
+
+import Location from './core/Location';
+import { Router, browserHistory } from 'react-router';
+import routes from './routes/routes';
+
+import FastClick from 'fastclick';
+import ContextHolder from './core/ContextHolder';
+import { addEventListener } from './core/DOMUtils'; // eslint-disable-line no-unused-vars
+import ga from 'react-ga';
+import gaId from './constants/ga';
+
+ga.initialize(gaId.id, 'none');
+
+let cssContainer = document.getElementById('css');
+const appContainer = document.getElementById('app');
+const context = {
+  insertCss: styles => styles._insertCss(),
+  onSetTitle: value => document.title = value,
+  onSetMeta: (name, content) => {
+    // Remove and create a new <meta /> tag in order to make it work
+    // with bookmarks in Safari
+    const elements = document.getElementsByTagName('meta');
+    [].slice.call(elements).forEach((element) => {
+      if (element.getAttribute('name') === name) {
+        element.parentNode.removeChild(element);
+      }
+    });
+    const meta = document.createElement('meta');
+    meta.setAttribute('name', name);
+    meta.setAttribute('content', content);
+    document.getElementsByTagName('head')[0].appendChild(meta);
+  },
+};
+
+function run() {
+  // Make taps on links and buttons work fast on mobiles
+  FastClick.attach(document.body);
+
+  // Setup the client-side stores with the same data the server had
+  Iso.bootstrap((state) => {
+    alt.bootstrap(state);
+  });
+
+  // Re-render the app when window.location changes
+  Location.listen(() => {
+    window.scrollTo(0, 0);
+
+    render(
+      <ContextHolder context={context}>
+        <Router
+          history={browserHistory}
+          routes={routes}
+        />
+      </ContextHolder>,
+      appContainer
+    );
+  });
+
+  // Remove the pre-rendered CSS because it's no longer used
+  if (cssContainer) {
+    cssContainer.parentNode.removeChild(cssContainer);
+    cssContainer = null;
+  }
+}
+
+// Run the application when both DOM is ready and page content is loaded
+if (['complete', 'loaded', 'interactive'].includes(document.readyState) && document.body) {
+  run();
+} else {
+  document.addEventListener('DOMContentLoaded', run, false);
+}

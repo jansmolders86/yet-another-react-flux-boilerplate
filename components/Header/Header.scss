@@ -1,0 +1,387 @@
+@import '../variables.scss';
+
+
+// Icons
+.iconLocale .path1:before {
+  @include iconFontSetup();
+  content: "\e912";
+  color: rgb(218, 218, 218);
+}
+
+.iconLocale .path2:before {
+  @include iconFontSetup();
+  content: "\e913";
+  margin-left: -1em;
+  color: rgb(45, 45, 45);
+}
+
+.iconHamburger:before {
+  @include iconFontSetup();
+  content: "\e915";
+}
+
+.iconUser:before {
+  @include iconFontSetup();
+  content: "\e904";
+}
+
+.iconSearch:before {
+  @include iconFontSetup();
+  content: "\e903";
+}
+
+.localeList{
+  cursor: pointer;
+}
+
+// Styling
+#nav,
+#mobile-nav{
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  z-index: 7;
+
+  .searchPlaceholder{
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    font-size: 13px;
+    color: darken($textColor, 20%);
+  }
+
+  .signIn{
+    cursor: pointer;
+  }
+
+  .dropdown{
+    padding: 20px;
+    position: relative;
+    ul{
+      height: 0;
+      transition: all linear .1s;
+      min-width: 150px;
+      width: 100%;
+      list-style: none;
+      padding:0 20px;
+      margin:15px 0 0 0;
+      display: block;
+      position: absolute;
+      top: 40px;
+      left: 0;
+      background: $bodyColor;
+      overflow: hidden;
+      li{
+        position: relative;
+        width:100%;
+        display: block;
+      }
+    }
+
+    &:hover{
+      background: $bodyColor;
+      > ul{
+        height: auto;
+        padding:20px;
+      }
+    }
+  }
+
+
+  @include respond-max-width(xs){
+    left:0;
+  }
+
+  ul{
+    list-style: none;
+    > li{
+      display: inline-block;
+      color: $textColor;
+      margin: 0;
+      padding: 20px;
+      text-transform: uppercase;
+      &.active{
+        color: $activeTextColor;
+      }
+
+      ul > li {
+        padding: 10px;
+      }
+      a{
+        color: $textColor;
+        text-decoration: none;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+#nav{
+  .searchWrapper{
+    margin-right: 50px;
+    position: relative;
+
+    input[type=text]{
+      background: rgba(0,0,0,0);
+      border:1px solid $activeTextColor;
+      padding:4px 10px;
+    }
+
+    button{
+      background: transparent;
+      border: none;
+      position: absolute;
+      right: 0;
+      top: 4px;
+    }
+  }
+}
+
+
+// Mobile Menu
+
+#mobileNav{
+
+  [class^="icon-"], [class*=" icon-"] {
+    font-size: 32px;
+  }
+
+  #mobileMenu {
+    opacity: 0;
+    height: 0;
+    width: 100vw;
+    position: fixed;
+    transition: .5s ease;
+    z-index: 9;
+    overflow:hidden;
+    background: $footerColor;
+    top: 0;
+    left: 0;
+    padding: 0 40px;
+    ul{
+      margin:0;
+      padding:0;
+      li{
+        width: 100%;
+        display: block;
+        height: auto;
+        padding: 5px 0 10px 0;
+        font-size: 16px;
+        text-transform: uppercase;
+        text-decoration: none;
+        a{
+          font-size: 16px;
+          text-transform: uppercase;
+          text-decoration: none;
+          &:hover,
+          &:focus,
+          &:active{
+            color: darken($textColor, 10%)!important;
+          }
+        }
+        &.subitems{
+          cursor: pointer;
+          ul{
+            position: fixed;
+            opacity: 0;
+            transition: .5s ease;
+            z-index: 999;
+            top:$mobileNavOffset;
+            right:-1000px;
+            width:100vw;
+            height:100vw;
+            background: $footerColor;
+            padding: 0 20px;
+            li{
+              padding-left: 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.open{
+    #mobileMenu{
+      opacity: 1;
+      height: 100vh;
+      padding-top: $mobileNavOffset;
+      > ul{
+        .subitems.open{
+          ul{
+            opacity: 1;
+            right:0;
+          }
+        }
+      }
+    }
+  }
+
+  #hamburger {
+    width: 35px;
+    height: 20px;
+    transform: rotate(0deg);
+    transition: .5s ease;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    z-index: 99;
+
+    span {
+      display: block;
+      position: absolute;
+      height: 3px;
+      width: 100%;
+      background: $textColor;
+      border-radius: 9px;
+      opacity: 1;
+      left: 0;
+      transform: rotate(0deg);
+      transition: .25s ease;
+
+      &:nth-child(1) {
+        top: 0;
+      }
+
+      &:nth-child(2),
+      &:nth-child(3) {
+        top: 8px;
+      }
+
+      &:nth-child(4) {
+        top: 16px;
+      }
+    }
+
+    &.open span {
+      &:nth-child(1) {
+        top: 8px;
+        width: 0%;
+        left: 50%;
+      }
+      &:nth-child(2) {
+        transform: rotate(45deg);
+      }
+      &:nth-child(3) {
+        transform: rotate(-45deg);
+      }
+      &:nth-child(4) {
+        top: 8px;
+        width: 0%;
+        left: 50%;
+      }
+    }
+
+    &.open.sub-open {
+      left: 20px;
+      span {
+        &:nth-child(2) {
+          transform: translateY(-0.4em) translateX(0.65em) rotate(-37deg) scaleX(0.6);
+        }
+        &:nth-child(3) {
+          transform: translateY(0.4em) translateX(0.65em) rotate(-150deg) scaleX(0.6);
+        }
+      }
+    }
+  }
+
+  .mobileRight{
+    width: 80%!important;
+    float:right!important;
+    @media screen and (min-width: 500px) and (max-width:1100px){
+      width:70%!important;
+    }
+    li{
+      float:left;
+      list-style: none;
+      padding: 20px;
+    }
+  }
+
+  .searchWrapper{
+    &.open{
+      .mobileSearchBox{
+        top: 0;
+        height: 75px;
+        opacity: 1;
+        z-index: 999;
+      }
+    }
+
+    > i.icon-search{
+      cursor:pointer;
+    }
+    .mobileSearchBox{
+      opacity: 0;
+      height: 0;
+      width:100vw;
+      background: $bodyColor;
+      padding: 10px;
+      position: fixed;
+      top: -200px;
+      left: 0;
+      transition: .25s ease;
+      input[type=text]{
+        background: rgba(0,0,0,0);
+        border:1px solid $activeTextColor;
+        padding:4px 10px;
+        width: 90%;
+        float:left;
+        height: 45px;
+        margin-top: 5px;
+        text-transform: uppercase;
+      }
+
+      button{
+        background: transparent;
+        border: none;
+        width: 10%;
+        float:left;
+        margin-top: 5px;
+      }
+    }
+  }
+}
+
+.dropdown{
+  padding: 20px;
+  ul{
+    height: 0;
+    transition: all linear .1s;
+    min-width: 150px;
+    width: 100%;
+    list-style: none;
+    padding:0 20px;
+    margin:15px 0 0 0;
+    display: block;
+    position: absolute;
+    top: 40px;
+    left: 0;
+    background: $bodyColor;
+    overflow: hidden;
+    z-index: 3;
+    li{
+      position: relative;
+      width:100%;
+      display: block;
+    }
+  }
+
+  &:hover{
+    background: $bodyColor;
+    > ul{
+      height: auto;
+      padding:20px;
+    }
+  }
+}
+
+
+// Make sure the page doesn't scroll when menu is open
+html.open,
+body.open{
+  overflow: hidden!important;
+}

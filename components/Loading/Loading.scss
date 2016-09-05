@@ -1,0 +1,49 @@
+@import '../variables.scss';
+
+.loadingWrapper{
+  text-align: center;
+  position: relative;
+  height: 80px;
+  width:400px;
+  margin: 20% auto 0;
+  h1{
+    color: $textColor;
+    position:absolute;
+    top: 0;
+    left:0;
+  }
+
+  .slider{
+    position:absolute;
+    width:400px;
+    height:2px;
+    margin-top:-30px;
+    bottom: 0;
+    left:0;
+
+    > div:not(.line){
+      position:absolute;
+      background:#222;
+      width:6px;
+      height:2px;
+    }
+
+    .line{
+      position:absolute;
+      background:$textColor;
+      width:400px;
+      height:2px;
+    }
+
+    .dot1{ animation: loading 2s infinite;}
+    .dot2{ animation: loading 2s 0.5s infinite; }
+    .dot3{ animation: loading 2s 1s infinite; }
+  }
+
+  @keyframes loading {
+    from { left: 0; }
+    to { left: 400px; }
+  }
+
+}
+

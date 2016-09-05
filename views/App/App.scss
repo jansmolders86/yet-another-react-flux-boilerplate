@@ -1,0 +1,49 @@
+@import '../../components/variables.scss';
+
+body{
+  background: $bodyColor;
+  overflow-x: hidden;
+}
+
+#sidebarPush{
+  min-height: calc(100vh - 250px);
+  position: relative;
+  overflow: hidden;
+  @include respond-min-width(md){
+    margin-left: 95px;
+    padding-right: 0;
+
+    > .row > .col-xs-12{
+      padding: 0!important;
+    }
+  }
+
+  @media only screen
+  and (min-device-width : 768px)
+  and (max-device-width : 1024px)
+  and (orientation : portrait) {
+    margin-left: 95px;
+    padding-right: 0;
+
+    > .row > .col-xs-12{
+      padding: 0!important;
+    }
+  }
+}
+
+h1{
+  font-weight: 700;
+
+  @include respond-max-width(xs){
+    font-size: 24px;
+  }
+}
+h2{
+  font-weight: 500;
+}
+
+p{
+  color: $textColor;
+}
+
+

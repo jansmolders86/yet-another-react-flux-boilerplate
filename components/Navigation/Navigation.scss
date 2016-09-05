@@ -1,0 +1,148 @@
+@import '../variables.scss';
+$mobileNavOffset : 75px;
+$sidebarSlideOutSpeed: .4s;
+
+.navElem{
+  li{
+    a{
+      cursor:pointer;
+
+      &.active{
+        color: $activeTextColor;
+      }
+
+    }
+  }
+}
+
+
+.navElem.hasSideBar{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li{
+    margin: 0;
+    padding: 0;
+
+
+    .sideBar{
+      display: block;
+      position: fixed;
+      left: -400px;
+      transition: left linear $sidebarSlideOutSpeed;
+      border-left: 2px solid rgba($bodyColor,.5);
+      height: 100%;
+      top: 0;
+      background: rgba($sidebarColor, .95);
+      padding: 10px 20px;
+      z-index: -1;
+      li{
+        opacity: 0;
+        transition: opacity ease ($sidebarSlideOutSpeed * 4);
+      }
+      .h1{
+        color: $activeTextColor;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+    }
+
+    &:hover{
+      .sideBar{
+        left:110px;
+        li{
+          opacity: 1;
+        }
+      }
+    }
+
+    a{
+      color: $textColor;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-family: $font-family;
+      font-weight: 700;
+      font-size: 14px;
+      width: 100%;
+      display: block;
+      padding: 10px 20px;
+      position: relative;
+      overflow: hidden;
+      &:before{
+        background-color: $activeTextColor;
+        display: none;
+        content:' ';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 3px;
+        height: 100%;
+      }
+
+      &.subitems:after {
+        right: 5px;
+        top: 50%;
+        border-style: solid;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-color: transparent;
+        border-left-color: rgba($textColor, .5);
+        border-width: 5px;
+        margin-top: -5px;
+      }
+
+      &:hover{
+        color: $activeTextColor;
+        text-decoration: none;
+        background: #222122;
+        &.subitems:after {
+          border-left-color: $activeTextColor;
+        }
+        &:before{
+          display: block;
+        }
+      }
+
+      &.active{
+        color: $activeTextColor;
+
+        &:before{
+          display: block;
+        }
+      }
+      &[data-item="hot"]{
+        &:before{
+          background-color: $hotColor;
+        }
+      }
+
+      &[data-item="tv"]{
+        &:before{
+          background-color: $tvColor;
+        }
+      }
+
+      &[data-item="movies"]{
+        &:before{
+          background-color: $moviesColor;
+        }
+      }
+
+      &[data-item="games"]{
+        &:before{
+          background-color: $gamesColor;
+        }
+      }
+
+      &[data-item="travel"]{
+        &:before{
+          background-color: $travelColor;
+        }
+      }
+    }
+  }
+}

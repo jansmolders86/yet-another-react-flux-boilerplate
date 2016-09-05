@@ -1,0 +1,198 @@
+$font-family: 'Open Sans', sans-serif, arial;
+
+// Color variables
+$textColor: #dadada;
+$invertedTextColor: #000;
+$activeTextColor: #fff;
+$bodyColor: #000;
+$sidebarColor: #19171a;
+$footerColor: #0a0a0a;
+$popOutColor: #434242;
+$footerColor: #000;
+
+$ctaButtonColor: #a53636;
+
+// Category colors
+$hotColor: #ed772f;
+$moviesColor: #ed2f2f;
+$gamesColor: #aced2f;
+$travelColor: #2faced;
+$tvColor: #ed2f7b;
+
+// Responsive variables
+$screen-xs: 480px !default;
+$screen-xs-min: $screen-xs !default;
+$screen-phone: $screen-xs-min !default;
+$screen-sm: 768px !default;
+$screen-sm-min: $screen-sm !default;
+$screen-tablet: $screen-sm-min !default;
+$screen-md: 992px !default;
+$screen-md-min: $screen-md !default;
+$screen-desktop: $screen-md-min !default;
+$screen-lg: 1200px !default;
+$screen-lg-min: $screen-lg !default;
+$screen-lg-desktop: $screen-lg-min !default;
+$screen-xs-max: ($screen-sm-min - 1) !default;
+$screen-sm-max: ($screen-md-min - 1) !default;
+$screen-md-max: ($screen-lg-min - 1) !default;
+
+$mobileNavOffset : 75px;
+$footerHeight: 210px;
+
+@font-face {
+  font-family: 'icomoon';
+  src: url('/fonts/icomoon.eot?x4znnt');
+  src: url('/fonts/icomoon.eot?#iefixx4znnt') format('embedded-opentype'),
+  url('/fonts/icomoon.woff?x4znnt') format('woff'),
+  url('/fonts/icomoon.ttf?x4znnt') format('truetype'),
+  url('/fonts/icomoon.svg?x4znnt#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+.iconMinus:before {
+  content: "\e916";
+}
+
+.iconCross:before {
+  content: "\e914";
+}
+
+.iconArrowLeft:before {
+  content: "\e905";
+}
+
+.iconArrowRight:before {
+  content: "\e906";
+}
+
+.iconCaret:before {
+  content: "\e900";
+}
+
+.iconArrow:before {
+  content: "\e901";
+}
+
+.iconThumbsUp:before {
+  content: "\e902";
+}
+
+.iconThumbsDown {
+  transform: rotate(-180deg);
+  display: block;
+  &:before {
+    content: "\e902";
+  }
+}
+
+.iconSearch:before {
+  content: "\e903";
+}
+
+.iconFacebook:before {
+  content: "\e907";
+}
+
+.iconHeartOutline:before {
+  content: "\e910";
+}
+
+.iconLike:before {
+  content: "\e911";
+}
+
+.iconMusic:before {
+  content: "\e917";
+}
+
+.iconMovies:before {
+  content: "\e918";
+  color: $moviesColor;
+}
+
+.iconGames:before {
+  content: "\e919";
+  color: $gamesColor;
+}
+
+.iconTv:before {
+  content: "\e91a";
+  color: $tvColor;
+}
+
+.iconHot:before {
+  content: "\e91b";
+  color: $hotColor;
+}
+
+.iconTravel:before {
+  content: "\e91c";
+  color: $travelColor;
+}
+
+@mixin iconFontSetup() {
+  font-family: 'icomoon';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@mixin respond-min-width($media) {
+  @if $media == xs {
+    //select xs devices and up
+    @media only screen and (min-width: $screen-xs-min) { @content; }
+  }
+
+  @if $media == sm {
+    //select sm devices and up
+    @media only screen and (min-width: $screen-sm-min) { @content; }
+  }
+
+  @if $media == md {
+    //select md devices and up
+    @media only screen and (min-width: $screen-md-min) { @content; }
+  }
+
+  @if $media == lg {
+    //select lg devices and up
+    @media only screen and (min-width: $screen-lg-min) { @content; }
+  }
+}
+
+
+@mixin respond-max-width($media) {
+  @if $media == xs {
+    //select xs devices and up
+    @media only screen and (max-width: $screen-xs-max) {
+      @content;
+    }
+  }
+
+  @if $media == sm {
+    //select sm devices and up
+    @media only screen and (max-width: $screen-sm-max) {
+      @content;
+    }
+  }
+
+  @if $media == md {
+    //select md devices and up
+    @media only screen and (max-width: $screen-md-max) {
+      @content;
+    }
+  }
+
+  @if $media == lg {
+    //select lg devices and up
+    @media only screen and (max-width: $screen-lg-max) {
+      @content;
+    }
+  }
+}

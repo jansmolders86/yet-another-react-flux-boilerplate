@@ -1,0 +1,15 @@
+{
+  "en": [
+    {
+      "signIn": "Sign In/Up",
+      "signOut": "Sign Out",
+      "signUp": "Sign up",
+      "404": "404: Page not found.",
+      "500": "500: Server error.",
+      "empty": "Category is empty",
+      "loading": "Loading...",
+      "login": "Sign Up",
+      "register": "Register"
+    }
+  ]
+}
